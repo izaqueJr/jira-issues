@@ -1,6 +1,7 @@
 import styles from "@/styles/Profile.module.css";
 import axios from "axios";
 import { GetServerSideProps } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -24,9 +25,9 @@ export default function Profile({ data, params }: any) {
 Projeto: ${item?.fields.project.name}
 Tarefa: ${item?.fields.summary} - ${item?.key}
 Status: ${item?.fields.status.name}
-Prazo: ${item?.fields.duedate}
+Prazo: ${item?.fields.duedate || "Sem prazo definido"} 
 Prioridade: ${item?.fields.priority.name}
-Relator: ${item?.fields.reporter.displayName}
+Link: https://ed3digital.atlassian.net/browse/${item?.key}
 - - -
     `;
 
@@ -36,7 +37,9 @@ Relator: ${item?.fields.reporter.displayName}
   return (
     <>
       <header className={styles.header}>
-        <h1>Tasks</h1>
+        <Link href="/">
+          <h1>Tasks</h1>
+        </Link>
 
         <div className={styles.profile}>
           <button
@@ -77,7 +80,8 @@ Relator: ${item?.fields.reporter.displayName}
                 <p className={styles.content}>
                   <span>Status:</span> {item?.fields.status.name}
                   <br />
-                  <span>Prazo:</span> {item?.fields.duedate}
+                  <span>Prazo:</span>{" "}
+                  {item?.fields.duedate || "Sem prazo definido"}
                   <br />
                   <span>Prioridade: </span>
                   {item?.fields.priority.name}
