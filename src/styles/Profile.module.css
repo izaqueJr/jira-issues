@@ -31,16 +31,6 @@
   transition: all 0.3s ease;
 }
 
-.main{
-  gap: 20px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  max-width: 900px;
-  margin:  40px auto;
-}
 
 .container{
   width: 400px;

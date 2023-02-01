@@ -1,14 +1,21 @@
+import { Cards } from "@/components/Cards";
+import { HeaderTitle, Main, ProfileName } from "@/styles/profile";
 import styles from "@/styles/Profile.module.css";
 import axios from "axios";
 import { GetServerSideProps } from "next";
-import Link from "next/link";
+
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import ToastAlert from "./../../components/ToastAlert";
 
-export default function Profile({ data, params }: any) {
-  console.log(params, ">>>>>>>>>>>>>>>>>>>>>");
+export default function Profile({ data }: any) {
+  const [open, setOpen] = useState(false);
+  const timerRef = useRef(0);
 
-  const [isCopied, setIsCopied] = useState<boolean>(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => clearTimeout(timerRef.current);
+  }, []);
 
   const sortArr = () => {
     return data.sort((a: any, b: any) => {
@@ -37,23 +44,29 @@ Link: https://ed3digital.atlassian.net/browse/${item?.key}
   return (
     <>
       <header className={styles.header}>
-        <Link href="/">
+        <HeaderTitle href="/">
           <h1>Tasks</h1>
-        </Link>
+        </HeaderTitle>
 
         <div className={styles.profile}>
           <button
-            disabled={isCopied}
             onClick={() => {
               navigator.clipboard.writeText(
                 textToClipboard.toString().replace(/,/g, "")
               );
-              setIsCopied(true);
+              setOpen(true);
+              window.clearTimeout(timerRef.current);
+              timerRef.current = window.setTimeout(() => {
+                setOpen(false);
+              }, 1000);
             }}
           >
-            {isCopied ? "Copiado!" : "Copiar Tasks"}
+            Copiar
           </button>
-          <h2>{data[0]?.fields.assignee.displayName} </h2>
+
+          <ToastAlert open={open} onOpenChange={setOpen} />
+
+          <ProfileName>{data[0]?.fields.assignee.displayName} </ProfileName>
 
           <figure>
             <img
@@ -65,43 +78,24 @@ Link: https://ed3digital.atlassian.net/browse/${item?.key}
         </div>
       </header>
 
-      <main className={styles.main}>
+      <Main>
         {dataItems.map((item: any, index: any) => {
           return (
-            <section key={index} className={styles.container}>
-              <a href={`https://ed3digital.atlassian.net/browse/${item?.key}`}>
-                <h3 className={styles.title}>
-                  Projeto: {item?.fields.project.name}
-                </h3>
-                <h4 className={styles.subtitle}>
-                  Tarefa: {item?.fields.summary} - {item?.key}
-                </h4>
-
-                <p className={styles.content}>
-                  <span>Status:</span> {item?.fields.status.name}
-                  <br />
-                  <span>Prazo:</span>{" "}
-                  {item?.fields.duedate || "Sem prazo definido"}
-                  <br />
-                  <span>Prioridade: </span>
-                  {item?.fields.priority.name}
-                  <br />
-                  <span></span>
-                </p>
-                <div className={styles.relator_content}>
-                  <h6> Relator - {item?.fields.reporter.displayName} </h6>
-                  <figure>
-                    <img
-                      src={item?.fields.reporter.avatarUrls["48x48"]}
-                      className={styles.avatar}
-                    />
-                  </figure>
-                </div>
-              </a>
-            </section>
+            <Cards
+              key={index}
+              index={index}
+              taskKey={item?.key}
+              taskProject={item?.fields.project.name}
+              taskName={item?.fields.summary}
+              taskStatus={item?.fields.status.name}
+              taskDueDate={item?.fields.duedate}
+              taskPriority={item?.fields.priority.name}
+              taskReporter={item?.fields.reporter.displayName}
+              taskReporterAvatar={item?.fields.reporter.avatarUrls["48x48"]}
+            />
           );
         })}
-      </main>
+      </Main>
     </>
   );
 }
