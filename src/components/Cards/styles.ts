@@ -1,50 +1,41 @@
-import { styled } from "@stitches/react";
+import { styled } from '../../../stitches.config';
+
 
 export const Section = styled("section", {
-  backgroundColor: "#2C3440",
   borderRadius: 10,
-  boxShadow: "0px 10px 25px rgba(29, 52, 54, 0.08)",
   maxWidth: 400,
   minWidth: 300,
   width: "100%",
+  boxShadow: "0px 10px 25px rgba(29, 52, 54, 0.08)",
 });
-export const Container = styled("a", {
+
+export const Container = styled('a', {
   width: "100%",
-  backgroundColor: "#2C3440",
+  backgroundColor: "#fff",
   display: "flex",
   flexDirection: "column",
   padding: 20,
   borderRadius: 10,
   height: "100%",
   justifyContent: "space-between",
-});
-
-export const Title = styled("h3", {
-  fontFamily: "Poppins",
-
-  margin: 0,
-  marginBottom: 10,
-  color: "#fff",
 
   variants: {
-    TitleType: {
-      title: {
-        fontSize: 20,
-        fontWeight: 500,
-      },
-      subtitle: {
-        fontSize: 16,
-        fontWeight: 400,
+    darkMode: {
+      true: {
+        backgroundColor: "#2C3440",
       },
     },
+
+    gap:{
+      8: { gap: 8 },
+      12: { gap:12 },
+      16: { gap: 16 },
+      20: { gap: 20 },
+      24: { gap: 24 },
+      28: { gap: 28 },
+    }
   },
-})
-export const Text = styled("p", {
-  margin: 0,
-  color: "#fff",
-  fontSize: 14,
-  lineHeight: "24px",
-})
+});
 
 export const RelatorContainer = styled("div", {
   display: "flex",

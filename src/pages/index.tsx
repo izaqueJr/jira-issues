@@ -5,7 +5,6 @@ import styles from "@/styles/Home.module.css";
 import { useForm } from "react-hook-form";
 export default function Home() {
   const { register, handleSubmit } = useForm({});
-
   async function redirectToTasks(data: any) {
     const { profile, domain } = data;
     await Router.push(`/profile?profile=${profile}&domain=${domain}`);

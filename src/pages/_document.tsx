@@ -1,5 +1,6 @@
+import React from "react";
 import { Html, Head, Main, NextScript } from "next/document";
-
+import { getCssText } from "../../stitches.config";
 export default function Document() {
   return (
     <Html lang="en">
@@ -13,6 +14,10 @@ export default function Document() {
         <link
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto:wght@400;500;700&display=swap"
           rel="stylesheet"
+        />
+        <style
+          id="stitches"
+          dangerouslySetInnerHTML={{ __html: getCssText() }}
         />
       </Head>
       <body>

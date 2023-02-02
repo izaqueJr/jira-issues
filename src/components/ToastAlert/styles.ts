@@ -1,5 +1,5 @@
 import * as Toast from "@radix-ui/react-toast";
-import { styled, keyframes } from "@stitches/react";
+import { styled, keyframes } from '../../../stitches.config';
 
 // keyframes
 

@@ -1,15 +1,22 @@
 import { Cards } from "@/components/Cards";
-import { HeaderTitle, Main, ProfileName } from "@/styles/profile";
-import styles from "@/styles/Profile.module.css";
+import { Heading, Text } from "@/styles/global";
+import {
+  Header,
+  HeaderContainer,
+  Main,
+  ProfileContainer,
+  Button,
+  DarkModeButton,
+  Container,
+} from "@/styles/profile";
 import axios from "axios";
 import { GetServerSideProps } from "next";
-
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import ToastAlert from "./../../components/ToastAlert";
-
+import * as Switch from "@radix-ui/react-switch";
 export default function Profile({ data }: any) {
   const [open, setOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const timerRef = useRef(0);
 
   useEffect(() => {
@@ -43,58 +50,100 @@ Link: https://ed3digital.atlassian.net/browse/${item?.key}
 
   return (
     <>
-      <header className={styles.header}>
-        <HeaderTitle href="/">
-          <h1>Tasks</h1>
-        </HeaderTitle>
+      <Header darkMode={darkMode}>
+        <HeaderContainer>
+          <Heading as="h1" darkMode={darkMode}>
+            Tasks
+          </Heading>
 
-        <div className={styles.profile}>
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(
-                textToClipboard.toString().replace(/,/g, "")
-              );
-              setOpen(true);
-              window.clearTimeout(timerRef.current);
-              timerRef.current = window.setTimeout(() => {
-                setOpen(false);
-              }, 1000);
-            }}
-          >
-            Copiar
-          </button>
+          <ProfileContainer>
+            <DarkModeButton
+              darkMode={darkMode}
+              onClick={() => {
+                darkMode ? setDarkMode(false) : setDarkMode(true);
+              }}
+            >
+              {darkMode ? (
+                <>
+                  <svg fill="none" viewBox="0 0 24 24" height="1em" width="1em">
+                    <path fill="currentColor" d="M12 16a4 4 0 000-8v8z" />
+                    <path
+                      fill="currentColor"
+                      fillRule="evenodd"
+                      d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 2v4a4 4 0 100 8v4a8 8 0 100-16z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </>
+              ) : (
+                <svg
+                  viewBox="0 0 512 512"
+                  fill="currentColor"
+                  height="1em"
+                  width="1em"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeMiterlimit={10}
+                    strokeWidth={32}
+                    d="M464 256 A208 208 0 0 1 256 464 A208 208 0 0 1 48 256 A208 208 0 0 1 464 256 z"
+                  />
+                  <path d="M256 176v160a80 80 0 010-160zM256 48v128a80 80 0 010 160v128c114.88 0 208-93.12 208-208S370.88 48 256 48z" />
+                </svg>
+              )}
+            </DarkModeButton>
 
-          <ToastAlert open={open} onOpenChange={setOpen} />
+            <Button
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  textToClipboard.toString().replace(/,/g, "")
+                );
+                setOpen(true);
+                window.clearTimeout(timerRef.current);
+                timerRef.current = window.setTimeout(() => {
+                  setOpen(false);
+                }, 1000);
+              }}
+            >
+              Copiar
+            </Button>
 
-          <ProfileName>{data[0]?.fields.assignee.displayName} </ProfileName>
+            <ToastAlert open={open} onOpenChange={setOpen} />
 
-          <figure>
-            <img
-              src={data[0]?.fields.assignee.avatarUrls["48x48"]}
-              alt="Imagem de perfil"
-              className={styles.avatar}
-            />
-          </figure>
-        </div>
-      </header>
+            <Heading size="3" darkMode={darkMode}>
+              {data[0]?.fields.assignee.displayName}{" "}
+            </Heading>
 
-      <Main>
-        {dataItems.map((item: any, index: any) => {
-          return (
-            <Cards
-              key={index}
-              index={index}
-              taskKey={item?.key}
-              taskProject={item?.fields.project.name}
-              taskName={item?.fields.summary}
-              taskStatus={item?.fields.status.name}
-              taskDueDate={item?.fields.duedate}
-              taskPriority={item?.fields.priority.name}
-              taskReporter={item?.fields.reporter.displayName}
-              taskReporterAvatar={item?.fields.reporter.avatarUrls["48x48"]}
-            />
-          );
-        })}
+            <figure>
+              <img
+                src={data[0]?.fields.assignee.avatarUrls["48x48"]}
+                alt="Imagem de perfil"
+              />
+            </figure>
+          </ProfileContainer>
+        </HeaderContainer>
+      </Header>
+      <Main darkMode={darkMode}>
+        <Container>
+          {dataItems.map((item: any, index: any) => {
+            return (
+              <Cards
+                darkMode={darkMode}
+                key={index}
+                index={index}
+                taskKey={item?.key}
+                taskProject={item?.fields.project.name}
+                taskName={item?.fields.summary}
+                taskStatus={item?.fields.status.name}
+                taskDueDate={item?.fields.duedate}
+                taskPriority={item?.fields.priority.name}
+                taskReporter={item?.fields.reporter.displayName}
+                taskReporterAvatar={item?.fields.reporter.avatarUrls["48x48"]}
+              />
+            );
+          })}
+        </Container>
       </Main>
     </>
   );
