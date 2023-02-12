@@ -56,8 +56,7 @@ export const RelatorContainer = styled("div", {
 
   "& > figure img": {
     borderRadius: "100%",
-
-
+    height: 40,
   }
 
 })
